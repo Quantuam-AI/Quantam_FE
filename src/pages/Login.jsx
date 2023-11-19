@@ -1,14 +1,19 @@
 import { useState } from "react";
 import styled from "styled-components";
-import quantum_ai from "../../assets/quantum-ai.png";
+import quantum_ai from "../assets/quantum-ai.png";
+import { useDispatch } from "react-redux";
+import { AuthAction } from "../store/AuthSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(id, password);
+    const userData = {id, password};
+    dispatch(AuthAction.loginSuccess(userData));
   };
 
   return (
