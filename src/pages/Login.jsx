@@ -1,41 +1,50 @@
 import { useState } from "react";
 import styled from "styled-components";
-import quantum_ai from "../../assets/quantum-ai.png";
+import quantum_ai from "../assets/quantum-ai.png";
+import { useDispatch } from "react-redux";
+import { AuthAction } from "../store/AuthSlice";
+import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(id, password);
+    const userData = { id, password };
+    dispatch(AuthAction.loginSuccess(userData));
   };
 
   return (
-    <Container>
-      <Wrapper>
-        <Logo src={quantum_ai} alt="Quantum AI" /> {/* 이미지 추가 */}
-        <Form onSubmit={handleSubmit}>
-          <Label className={id && "filled"}>
-            <PlaceHolders>ID</PlaceHolders>
-            <Input
-              type="text"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
-          </Label>
-          <Label className={password && "filled"}>
-            <PlaceHolders>Password</PlaceHolders>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Label>
-          <Button type="submit">Login</Button>
-        </Form>
-      </Wrapper>
-    </Container>
+    <>
+      <MainNavigation />
+      <Container>
+        <Wrapper>
+          <Logo src={quantum_ai} alt="Quantum AI" /> {/* 이미지 추가 */}
+          <Form onSubmit={handleSubmit}>
+            <Label className={id && "filled"}>
+              <PlaceHolders>ID</PlaceHolders>
+              <Input
+                type="text"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+              />
+            </Label>
+            <Label className={password && "filled"}>
+              <PlaceHolders>Password</PlaceHolders>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Label>
+            <Button type="submit">Login</Button>
+          </Form>
+        </Wrapper>
+      </Container>
+    </>
   );
 };
 
