@@ -1,12 +1,12 @@
 import MainNavigation from "../components/MainNavigation";
 
-function HomePage() {
+const Text = () => {
   return (
     <>
       <MainNavigation />
-      <p>Browse all our amazing events!</p>
+      텍스트 데이터를 저장하는 페이지 입니다.
     </>
   );
-}
+};
 
-export default HomePage;
+export default Text;
