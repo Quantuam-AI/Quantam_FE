@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import DropdownMenu from "../components/DropDownMenu";
+import DropdownMenu from "../components/DropdownMenu";
 
 const ImagePage = () => {
   return (
