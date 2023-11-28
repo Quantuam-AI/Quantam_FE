@@ -3,7 +3,7 @@ import styled from "styled-components";
 import quantum_ai from "../assets/quantum-ai.png";
 import { useDispatch } from "react-redux";
 import { AuthAction } from "../store/AuthSlice";
-import MainNavigation from "../components/MainNavigation";
+// import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -19,10 +19,9 @@ const Login = () => {
 
   return (
     <>
-      <MainNavigation />
       <Container>
         <Wrapper>
-          <Logo src={quantum_ai} alt="Quantum AI" /> {/* 이미지 추가 */}
+          <Logo src={quantum_ai} alt="Quantum AI" />
           <Form onSubmit={handleSubmit}>
             <Label className={id && "filled"}>
               <PlaceHolders>ID</PlaceHolders>
@@ -53,14 +52,20 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 20px;
 `;
 
 const Wrapper = styled.div`
   background: white;
-  padding: 3rem;
+  padding: 2rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
+
+  @media (max-width: 500px) {
+    padding: 1.5rem;
+  }
 `;
 
 const Form = styled.form`
@@ -93,8 +98,8 @@ const Label = styled.label`
 
 const Input = styled.input`
   width: 100%;
-  padding: 25px; // 패딩 조정
-  box-sizing: border-box; // 박스 모델 변경
+  padding: 25px;
+  box-sizing: border-box;
   background: #f9f9fa;
   color: black;
   margin-bottom: 0.9rem;
@@ -132,10 +137,15 @@ const PlaceHolders = styled.span`
 `;
 
 const Logo = styled.img`
-  width: 80%;
+  width: 60%;
   height: auto;
   display: block;
-  margin: 0 auto 50px;
+  margin: 0 auto 30px;
+
+  @media (max-width: 500px) {
+    width: 80%;
+    margin-bottom: 20px;
+  }
 `;
 
 export default Login;
