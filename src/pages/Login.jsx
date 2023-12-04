@@ -1,20 +1,18 @@
-import { useState } from "react";
 import styled from "styled-components";
 import quantum_ai from "../assets/quantum-ai.png";
-import { useDispatch } from "react-redux";
-import { AuthAction } from "../store/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { SigninAction } from "../store/SigninSlice";
+import { signinAsync } from "../store/signin-action";
 // import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const formData = useSelector((state) => state.signin.formData);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(id, password);
-    const userData = { id, password };
-    dispatch(AuthAction.loginSuccess(userData));
+
+    dispatch(signinAsync(formData));
   };
 
   return (
@@ -23,20 +21,22 @@ const Login = () => {
         <Wrapper>
           <Logo src={quantum_ai} alt="Quantum AI" />
           <Form onSubmit={handleSubmit}>
-            <Label className={id && "filled"}>
+            <Label className={formData.memberId && "filled"}>
               <PlaceHolders>ID</PlaceHolders>
               <Input
                 type="text"
-                value={id}
-                onChange={(e) => setId(e.target.value)}
+                id="id"
+                value={formData.memberId}
+                onChange={(e) => dispatch(SigninAction.updateFormData({ memberId: e.target.value }))}
               />
             </Label>
-            <Label className={password && "filled"}>
+            <Label className={formData.memberPassword && "filled"}>
               <PlaceHolders>Password</PlaceHolders>
               <Input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                value={formData.memberPassword}
+                onChange={(e) => dispatch(SigninAction.updateFormData({ memberPassword: e.target.value }))}
               />
             </Label>
             <Button type="submit">Login</Button>
@@ -133,7 +133,8 @@ const Button = styled.button`
 `;
 
 const PlaceHolders = styled.span`
-  margin: 7px 0px 10px 5px;
+  margin: 7px 0px 5px 5px;
+  /* font-size: 12px; */
 `;
 
 const Logo = styled.img`
@@ -149,3 +150,6 @@ const Logo = styled.img`
 `;
 
 export default Login;
+
+
+
