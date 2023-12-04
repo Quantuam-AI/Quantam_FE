@@ -17,3 +17,19 @@ export const signupAsync = (data) => async (dispatch) => {
         throw new Error("회원가입에 실패하였습니다.");
     }
 };
+
+export const checkDuplicate =(memberId) =>  async () =>{
+    try {
+        const response = await axios.post("http://101.101.211.67:8080//user/duplicatecheck", { memberId });
+
+        if (!response.data) {
+            throw new Error("중복 확인에 실패하였습니다.");
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("중복 확인에 실패하였습니다.");
+    }
+};
+
