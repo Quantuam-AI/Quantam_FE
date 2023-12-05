@@ -1,15 +1,157 @@
-import { Link } from "react-router-dom";
+import * as React from "react";
+import PropTypes from "prop-types";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
-const Layout = () => {
-  return (
-    <>
-      <Link to="/">Home</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/sound">Sound</Link>
-      <Link to="/text">Text</Link>
-      <Link to="/image">Image</Link>
-    </>
+const drawerWidth = 240;
+const navItems = ["Home", "Image", "Sound", "Text", "Login"];
+
+function DrawerAppBar(props) {
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleNavigation = (item) => {
+    switch (item) {
+      case "Home":
+        navigate("/");
+        break;
+      case "Image":
+        navigate("/image");
+        break;
+      case "Sound":
+        navigate("/sound");
+        break;
+      case "Text":
+        navigate("/text");
+        break;
+      case "Login":
+        navigate("/login");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        MUI
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item} disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "center" }}
+              onClick={() => handleNavigation(item)}
+            >
+              <ListItemText primary={item} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar component="nav">
+        <Toolbar style={{ backgroundColor: "white" }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Typography
+            style={{ color: "black" }}
+            variant="h6"
+            component="div"
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", sm: "block" },
+              marginLeft: "-3%", // Set left margin to 10%
+            }}
+          >
+            <img
+              src="src/assets/quantum-ai.png"
+              alt="Quantum AI Logo"
+              style={{
+                width: "100%",
+                maxWidth: "200px",
+                marginLeft: "10%", // Set left margin to 10%
+              }}
+            />
+          </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {navItems.map((item) => (
+              <Button
+                key={item}
+                sx={{ color: "#1976D2" }}
+                onClick={() => handleNavigation(item)}
+              >
+                {item}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <nav>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </nav>
+      <Box component="main" sx={{ p: 3 }}>
+        <Toolbar />
+        <Typography>{/* Your content goes here */}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+DrawerAppBar.propTypes = {
+  window: PropTypes.func,
 };
 
-export default Layout;
+export default DrawerAppBar;
