@@ -1,10 +1,11 @@
 import MainNavigation from "../components/MainNavigation";
 
+import MainText from "../components/MainText";
 function HomePage() {
   return (
     <>
       <MainNavigation />
-      <p>Browse all our amazing events!</p>
+      <MainText></MainText>
     </>
   );
 }
