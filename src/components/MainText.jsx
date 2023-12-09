@@ -35,7 +35,7 @@ const InfoDiv = styled.div`
   }
 
   img {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     opacity: ${(props) => (props.showImg ? 1 : 0)};
     transition: opacity 0.5s ease-in-out;
@@ -86,12 +86,16 @@ export default function MainText({ dataAugmentation, preprocessing }) {
       <h2> Data to Information</h2>
       <img src="src/assets/qa_preview.png" alt="Preview" />
       <h1>
-        인공지능 학습을 위한{" "}
-        <span className={dataAugmentation ? "highlight" : ""}>데이터 증강</span>{" "}
+        인공지능 학습을 위한
+        <br />
+        <span className={dataAugmentation ? "highlight" : ""}>
+          데이터 증강
+        </span>{" "}
         및 <span className={preprocessing ? "highlight" : ""}>전처리 과정</span>
         에 대한 연구
       </h1>
-      <h3>종합설계프로젝트 8팀 김규회 • 여다영 • 장휘영 • 채준혁 • 황효성 </h3>
+      <h3>종합설계프로젝트 8팀</h3>
+      <h3>김규회 • 여다영 • 장휘영 • 채준혁 • 황효성 </h3>
       <List
         className="list"
         sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
