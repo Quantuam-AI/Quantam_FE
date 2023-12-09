@@ -1,19 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const SigninSlice = createSlice({
-    name: 'signup',
+    name: 'signin',
     initialState: {
-        formData: {
-            memberId: '',
-            memberPassword: '',
-        },
+        memberId: '',
+        memberPassword: '',
+        isLoggedIn: false,
     },
     reducers: {
-        updateFormData: (state, action) => {
-            state.formData = { ...state.formData, ...action.payload };
+        updateMemberId: (state, action) => {
+            state.memberId = action.payload;
         },
-        signinSuccess: (state, action) => {
-            state.formData = action.payload;
+        updateMemberPassword: (state, action) => {
+            state.memberPassword = action.payload;
+        },
+        signinSuccess: (state) => {
+            state.isLoggedIn = true; 
+            console.log(state.isLoggedIn);
+        },
+        signout: (state) => {
+            state.isLoggedIn = false; // 추가
         },
     }
 });

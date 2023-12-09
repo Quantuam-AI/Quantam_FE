@@ -3,16 +3,20 @@ import quantum_ai from "../assets/quantum-ai.png";
 import { useDispatch, useSelector } from "react-redux";
 import { SigninAction } from "../store/SigninSlice";
 import { signinAsync } from "../store/signin-action";
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.signin.formData);
+  const { memberId, memberPassword } = useSelector((state) => state.signin);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    dispatch(signinAsync(formData));
+    dispatch(signinAsync(memberId, memberPassword));
+    navigate("/");
   };
 
   return (
@@ -21,26 +25,28 @@ const Login = () => {
         <Wrapper>
           <Logo src={quantum_ai} alt="Quantum AI" />
           <Form onSubmit={handleSubmit}>
-            <Label className={formData.memberId && "filled"}>
+            <Label className={memberId && "filled"}>
               <PlaceHolders>ID</PlaceHolders>
               <Input
                 type="text"
                 id="id"
-                value={formData.memberId}
-                onChange={(e) => dispatch(SigninAction.updateFormData({ memberId: e.target.value }))}
+                value={memberId}
+                onChange={(e) => dispatch(SigninAction.updateMemberId(e.target.value))}
               />
             </Label>
-            <Label className={formData.memberPassword && "filled"}>
+            <Label className={memberPassword && "filled"}>
               <PlaceHolders>Password</PlaceHolders>
               <Input
                 type="password"
                 id="password"
-                value={formData.memberPassword}
-                onChange={(e) => dispatch(SigninAction.updateFormData({ memberPassword: e.target.value }))}
+                value={memberPassword}
+                onChange={(e) => dispatch(SigninAction.updateMemberPassword(e.target.value))}
               />
             </Label>
             <Button type="submit">Login</Button>
           </Form>
+          <SignupLink to="/signup">회원가입</SignupLink>
+          <HomeLink to="/">홈으로 가기</HomeLink>
         </Wrapper>
       </Container>
     </>
@@ -147,6 +153,23 @@ const Logo = styled.img`
     width: 80%;
     margin-bottom: 20px;
   }
+`;
+
+const SignupLink = styled(Link)`
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: underline;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+
+const HomeLink = styled(Link)`
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 export default Login;
