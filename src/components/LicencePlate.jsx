@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const LicencePlate = () => {
+  const navigate = useNavigate();
   const [selectedImages, setSelectedImages] = useState([]);
   const [memberName, setMemberName] = useState(""); // memberName 상태 추가
+  const id = useSelector((state) => state.signin.id);
+  console.log("라이선스 플레이트", id);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://101.101.211.67:8080/user/${id}`);
+
+        // console.log(response.data.data.memberName);
+        setMemberName(response.data.data.memberName);
+        return response.data;
+      } catch (error) {
+        console.error("데이터를 불러오는데 실패하였습니다.", error);
+      }
+    };
+
+    fetchData(); // 비동기 함수를 호출합니다.
+  }, [id]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setSelectedImages(imageUrls);
+    // console.log("멤버이름", memberName);
   };
 
   const uploadImages = async () => {
-    if (selectedImages.length === 0) {
-      alert("이미지를 선택해주세요.");
-      return;
-    }
 
     const formData = new FormData();
     formData.append("memberName", memberName); // memberName 추가
@@ -36,6 +56,7 @@ const LicencePlate = () => {
 
       if (response.ok) {
         alert("업로드가 성공적으로 완료되었습니다.");
+        navigate("/");
       } else {
         alert("업로드 실패");
       }
@@ -46,19 +67,14 @@ const LicencePlate = () => {
 
   return (
     <div>
-      <StyledInput
-        type="text"
-        value={memberName}
-        onChange={(e) => setMemberName(e.target.value)}
-        placeholder="이름 입력"
-      />
+
       <FileInput
         type="file"
         accept="image/*"
         multiple
         onChange={handleImageChange}
       />
-      <button onClick={uploadImages}>이미지 업로드</button>
+      <StyledButton onClick={uploadImages}>이미지 업로드</StyledButton>
       <ImageContainer>
         {selectedImages.map((image, index) => (
           <StyledImage key={index} src={image} alt={`Selected ${index}`} />
@@ -68,24 +84,26 @@ const LicencePlate = () => {
   );
 };
 
-const StyledInput = styled.input`
-  width: 100%;
-  padding: 10px 0;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
 
-  &:focus {
-    outline: none;
-    border-color: #0078fe;
-    box-shadow: 0px 0px 8px rgba(0, 120, 254, 0.2);
-  }
-`;
 
 const FileInput = styled.input`
   margin: 20px 0;
+`;
+
+const StyledButton = styled.button`
+  margin-top: 50px;
+  padding: 12px 24px;
+  background-color: #0078fe;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 const ImageContainer = styled.div`

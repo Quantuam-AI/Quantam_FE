@@ -116,7 +116,7 @@ function DrawerAppBar(props) {
             <Typography
               style={{
                 color: "black",
-                marginLeft: "-3%", // Set left margin to 10%
+                marginLeft: "-2%", // Set left margin to 10%
                 minWidth: "100px", // Set a minimum width
                 maxWidth: "200px", // Set a maximum width
                 display: { xs: "none", sm: "block" },

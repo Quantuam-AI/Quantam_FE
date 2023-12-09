@@ -6,6 +6,7 @@ const SigninSlice = createSlice({
         memberId: '',
         memberPassword: '',
         isLoggedIn: false,
+        id: '',
     },
     reducers: {
         updateMemberId: (state, action) => {
@@ -14,12 +15,13 @@ const SigninSlice = createSlice({
         updateMemberPassword: (state, action) => {
             state.memberPassword = action.payload;
         },
-        signinSuccess: (state) => {
-            state.isLoggedIn = true; 
-            console.log(state.isLoggedIn);
+        signinSuccess: (state, action) => {
+            state.isLoggedIn = true;
+            state.id = action.payload;
         },
         signout: (state) => {
             state.isLoggedIn = false; // 추가
+            state.id = '';
         },
     }
 });

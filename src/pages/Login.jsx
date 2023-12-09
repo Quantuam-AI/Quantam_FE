@@ -5,16 +5,18 @@ import { SigninAction } from "../store/SigninSlice";
 import { signinAsync } from "../store/signin-action";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-// import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { memberId, memberPassword } = useSelector((state) => state.signin);
+  // console.log(memberId, memberPassword);
+  // const id = useSelector((state) => state.signin.id);
 
-  const handleSubmit = (event) => {
+  // console.log("로그인창", id);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
     dispatch(signinAsync(memberId, memberPassword));
     navigate("/");
   };

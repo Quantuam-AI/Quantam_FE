@@ -1,4 +1,3 @@
-import { Info } from "@mui/icons-material";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import List from "@mui/material/List";
