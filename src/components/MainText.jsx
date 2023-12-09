@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
+import preview from "../assets/qa_preview.png"
 
 const InfoDiv = styled.div`
   text-align: center;
@@ -83,7 +84,7 @@ export default function MainText({ dataAugmentation, preprocessing }) {
       showList={showList}
     >
       <h2> Data to Information</h2>
-      <img src="src/assets/qa_preview.png" alt="Preview" />
+      <img src={preview} alt="Preview" />
       <h1>
         인공지능 학습을 위한
         <br />

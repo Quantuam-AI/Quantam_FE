@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { SigninAction } from "../store/SigninSlice";
+import Logo from "../assets/quantum-ai.png"
 
 const drawerWidth = 240;
 const navItems = ["Home", "Image", "Sound", "Text", "Login"];
@@ -133,7 +134,7 @@ function DrawerAppBar(props) {
               }}
             >
               <img
-                src="src/assets/quantum-ai.png"
+                src={Logo}
                 alt="Quantum AI Logo"
                 style={{
                   width: "100%",
