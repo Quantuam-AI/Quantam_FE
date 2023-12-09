@@ -1,20 +1,22 @@
-import { useState } from "react";
 import styled from "styled-components";
 import quantum_ai from "../assets/quantum-ai.png";
-import { useDispatch } from "react-redux";
-import { AuthAction } from "../store/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { SigninAction } from "../store/SigninSlice";
+import { signinAsync } from "../store/signin-action";
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const { memberId, memberPassword } = useSelector((state) => state.signin);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(id, password);
-    const userData = { id, password };
-    dispatch(AuthAction.loginSuccess(userData));
+
+    dispatch(signinAsync(memberId, memberPassword));
+    navigate("/");
   };
 
   return (
@@ -23,24 +25,28 @@ const Login = () => {
         <Wrapper>
           <Logo src={quantum_ai} alt="Quantum AI" />
           <Form onSubmit={handleSubmit}>
-            <Label className={id && "filled"}>
+            <Label className={memberId && "filled"}>
               <PlaceHolders>ID</PlaceHolders>
               <Input
                 type="text"
-                value={id}
-                onChange={(e) => setId(e.target.value)}
+                id="id"
+                value={memberId}
+                onChange={(e) => dispatch(SigninAction.updateMemberId(e.target.value))}
               />
             </Label>
-            <Label className={password && "filled"}>
+            <Label className={memberPassword && "filled"}>
               <PlaceHolders>Password</PlaceHolders>
               <Input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                value={memberPassword}
+                onChange={(e) => dispatch(SigninAction.updateMemberPassword(e.target.value))}
               />
             </Label>
             <Button type="submit">Login</Button>
           </Form>
+          <SignupLink to="/signup">회원가입</SignupLink>
+          <HomeLink to="/">홈으로 가기</HomeLink>
         </Wrapper>
       </Container>
     </>
@@ -133,7 +139,8 @@ const Button = styled.button`
 `;
 
 const PlaceHolders = styled.span`
-  margin: 7px 0px 10px 5px;
+  margin: 7px 0px 5px 5px;
+  /* font-size: 12px; */
 `;
 
 const Logo = styled.img`
@@ -148,4 +155,24 @@ const Logo = styled.img`
   }
 `;
 
+const SignupLink = styled(Link)`
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: underline;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+
+const HomeLink = styled(Link)`
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+`;
+
 export default Login;
+
+
+
