@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import DropdownMenu from "../components/DropdownMenu";
+import MainNavigation from "../components/MainNavigation";
 
 const ImagePage = () => {
   return (
+    <>
+    <MainNavigation />
     <PageContainer>
       <Content>
         <Title>이미지 데이터 저장</Title>
@@ -13,6 +16,7 @@ const ImagePage = () => {
         <DropdownMenu />
       </Content>
     </PageContainer>
+    </>
   );
 };
 

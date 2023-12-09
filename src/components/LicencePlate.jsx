@@ -1,178 +1,122 @@
-import { useState, useRef, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import cameraButton from "../assets/shutter-camera.png";
-import { AiOutlineClose } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const LicencePlate = () => {
-  const videoRef = useRef(null);
-  const [stream, setStream] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [memberName, setMemberName] = useState(""); // memberName 상태 추가
+  const id = useSelector((state) => state.signin.id);
+  console.log("라이선스 플레이트", id);
 
-  // 사용자의 카메라에 접근하여 스트림을 가져옴
   useEffect(() => {
-    const enableStream = async () => {
+    const fetchData = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        setStream(stream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error(err);
+        const response = await axios.get(`http://101.101.211.67:8080/user/${id}`);
+
+        // console.log(response.data.data.memberName);
+        setMemberName(response.data.data.memberName);
+        return response.data;
+      } catch (error) {
+        console.error("데이터를 불러오는데 실패하였습니다.", error);
       }
     };
 
-    enableStream();
-    // 컴포넌트가 언마운트될 때 스트림을 종료함
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => {
-          track.stop();
-        });
-      }
-    };
-  }, []);
+    fetchData(); // 비동기 함수를 호출합니다.
+  }, [id]);
 
-  // 사진 촬영
-  const captureImage = () => {
-    if (videoRef.current) {
-      let canvas = document.createElement("canvas");
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      let ctx = canvas.getContext("2d");
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      // 캔버스에서 이미지를 blob으로 변환
-      canvas.toBlob((blob) => {
-        const imageFile = new File([blob], `image_${Date.now()}.jpeg`, {
-          type: "image/jpeg",
-        });
-        // upload api
-        // console.log("촬영 성공 " + imageFile);
-      }, "image/jpeg");
-    }
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setSelectedImages(imageUrls);
+    // console.log("멤버이름", memberName);
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const uploadImages = async () => {
+
+    const formData = new FormData();
+    formData.append("memberName", memberName); // memberName 추가
+
+    const files = document.querySelector('input[type="file"]').files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append("file", files[i]);
+    }
+
+    const apiUrl = "http://101.101.211.67:8080/image"; // API 엔드포인트
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {},
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert("업로드가 성공적으로 완료되었습니다.");
+        navigate("/");
+      } else {
+        alert("업로드 실패");
+      }
+    } catch (error) {
+      alert("업로드 중 에러 발생:", error);
+    }
   };
 
   return (
     <div>
-      <OpenCameraButton onClick={toggleModal}>지금 촬영하기</OpenCameraButton>
-      {isModalOpen && (
-        <Modal>
-          <ModalContent>
-            <CloseButtonWrapper>
-              <CloseButton onClick={toggleModal}>
-                <AiOutlineClose size={24} />
-              </CloseButton>
-            </CloseButtonWrapper>
-            <VideoWrapper>
-              <VideoFeed autoPlay playsInline ref={videoRef} />
-            </VideoWrapper>
-            <CaptureButton
-              src={cameraButton}
-              alt="Camera Button"
-              onClick={captureImage}
-              onTouchEnd={captureImage}
-            />
-          </ModalContent>
-        </Modal>
-      )}
+
+      <FileInput
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleImageChange}
+      />
+      <StyledButton onClick={uploadImages}>이미지 업로드</StyledButton>
+      <ImageContainer>
+        {selectedImages.map((image, index) => (
+          <StyledImage key={index} src={image} alt={`Selected ${index}`} />
+        ))}
+      </ImageContainer>
     </div>
   );
 };
 
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
-const breathingAnimation = keyframes`
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(0, 120, 254, 0.2);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px 0 rgba(0, 120, 254, 0.4);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(0, 120, 254, 0.2);
-  }
-`;
 
-const OpenCameraButton = styled.button`
-  padding: 16px 0px;
-  width: 100%;
+const FileInput = styled.input`
   margin: 20px 0;
-  border: none;
-  border-radius: 10px;
+`;
+
+const StyledButton = styled.button`
+  margin-top: 50px;
+  padding: 12px 24px;
   background-color: #0078fe;
   color: white;
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: 0px 4px 8px rgba(0, 120, 254, 0.2);
-  transition: background-color 0.3s, box-shadow 0.3s;
-  animation: ${breathingAnimation} 4s ease-in-out infinite;
-`;
-
-const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  width: 80%;
-  height: 90%;
-  padding: 20px;
-  border-radius: 5px;
-`;
-
-const VideoWrapper = styled.div`
-  width: 80%;
-  height: 80%;
-  overflow: hidden;
-`;
-
-const CaptureButton = styled.img`
-  margin-top: 20px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-`;
-
-const VideoFeed = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-const CloseButtonWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-`;
-
-const CloseButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  margin: 10px;
   border: none;
-  background: none; // 배경색 제거
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+const StyledImage = styled.img`
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 10px;
 `;
 
 export default LicencePlate;
