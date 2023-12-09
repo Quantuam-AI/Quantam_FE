@@ -15,6 +15,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { SigninAction } from "../store/SigninSlice";
 
 const drawerWidth = 240;
 const navItems = ["Home", "Image", "Sound", "Text", "Login"];
@@ -23,6 +25,9 @@ function DrawerAppBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
+
+  const { isLoggedIn } = useSelector((state) => state.signin);
+  const dispatch = useDispatch();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -34,13 +39,23 @@ function DrawerAppBar(props) {
         navigate("/");
         break;
       case "Image":
-        navigate("/image");
+        if (isLoggedIn) navigate("/image"); // 이미 로그인 되어 있을 때만 이동
+        else {
+          alert("로그인이 필요한 서비스입니다.")
+        }
         break;
       case "Sound":
-        navigate("/sound");
+        if (isLoggedIn) navigate("/sound");
+        else {
+          alert("로그인이 필요한 서비스입니다.")
+        }
         break;
       case "Text":
-        navigate("/text");
+        if (isLoggedIn) navigate("/text");
+        else {
+          alert("로그인이 필요한 서비스입니다.")
+
+        }
         break;
       case "Login":
         navigate("/login");
@@ -48,6 +63,13 @@ function DrawerAppBar(props) {
       default:
         break;
     }
+  };
+
+  const handleLogout = () => {
+    // 여기에 로그아웃 처리를 추가
+    // 예를 들어, Redux로 상태를 업데이트하는 액션을 디스패치할 수 있습니다.
+    dispatch(SigninAction.signout());
+    navigate("/login");
   };
 
   const drawer = (
@@ -114,9 +136,9 @@ function DrawerAppBar(props) {
               <Button
                 key={item}
                 sx={{ color: "#1976D2" }}
-                onClick={() => handleNavigation(item)}
+                onClick={() => (item === "Login" ? handleLogout() : handleNavigation(item))}
               >
-                {item}
+                {item === "Login" ? (isLoggedIn ? "Logout" : "Login") : item}
               </Button>
             ))}
           </Box>
@@ -144,7 +166,7 @@ function DrawerAppBar(props) {
       </nav>
       <Box component="main" sx={{ p: 3 }}>
         <Toolbar />
-        <Typography>{/* Your content goes here */}</Typography>
+        <Typography />
       </Box>
     </Box>
   );
