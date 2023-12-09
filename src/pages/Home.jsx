@@ -5,7 +5,7 @@ function HomePage() {
   return (
     <>
       <MainNavigation />
-      <MainText></MainText>
+      <MainText/>
     </>
   );
 }

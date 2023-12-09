@@ -1,7 +1,6 @@
 import { Info } from "@mui/icons-material";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
