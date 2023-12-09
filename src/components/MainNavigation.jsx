@@ -39,22 +39,21 @@ function DrawerAppBar(props) {
         navigate("/");
         break;
       case "Image":
-        if (isLoggedIn) navigate("/image"); // 이미 로그인 되어 있을 때만 이동
+        if (isLoggedIn) navigate("/image");
         else {
-          alert("로그인이 필요한 서비스입니다.")
+          alert("로그인이 필요한 서비스입니다.");
         }
         break;
       case "Sound":
         if (isLoggedIn) navigate("/sound");
         else {
-          alert("로그인이 필요한 서비스입니다.")
+          alert("로그인이 필요한 서비스입니다.");
         }
         break;
       case "Text":
         if (isLoggedIn) navigate("/text");
         else {
-          alert("로그인이 필요한 서비스입니다.")
-
+          alert("로그인이 필요한 서비스입니다.");
         }
         break;
       case "Login":
@@ -66,23 +65,20 @@ function DrawerAppBar(props) {
   };
 
   const handleLogout = () => {
-    // 여기에 로그아웃 처리를 추가
-    // 예를 들어, Redux로 상태를 업데이트하는 액션을 디스패치할 수 있습니다.
     dispatch(SigninAction.signout());
     navigate("/login");
   };
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
       <Divider />
       <List>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton
-              sx={{ textAlign: "center" }}
+              sx={{
+                textAlign: "center",
+              }}
               onClick={() => handleNavigation(item)}
             >
               <ListItemText primary={item} />
@@ -97,78 +93,120 @@ function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar component="nav">
-        <Toolbar style={{ backgroundColor: "white" }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Typography
-            style={{ color: "black" }}
-            variant="h6"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", sm: "block" },
-              marginLeft: "-3%", // Set left margin to 10%
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar component="nav">
+          <Toolbar
+            style={{
+              backgroundColor: "white",
             }}
           >
-            <img
-              src="src/assets/quantum-ai.png"
-              alt="Quantum AI Logo"
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            {/* Typography with img */}
+            <Typography
               style={{
-                width: "100%",
-                maxWidth: "200px",
-                marginLeft: "10%", // Set left margin to 10%
+                color: "black",
+                marginLeft: "-3%", // Set left margin to 10%
+                minWidth: "100px", // Set a minimum width
+                maxWidth: "200px", // Set a maximum width
+                display: { xs: "none", sm: "block" },
+                "@media (max-width: 599px)": {
+                  display: "none", // Hide img on xs and sm
+                },
               }}
-            />
-          </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{ color: "#1976D2" }}
-                onClick={() => (item === "Login" ? handleLogout() : handleNavigation(item))}
+              variant="h6"
+              component="div"
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                marginLeft: "-3%", // Set left margin to 10%
+              }}
+            >
+              <img
+                src="src/assets/quantum-ai.png"
+                alt="Quantum AI Logo"
+                style={{
+                  width: "100%",
+                  maxWidth: "100%",
+                  marginLeft: "10%",
+                }}
+              />
+            </Typography>
+
+            <div style={{}}>
+              <Box
+                sx={{
+                  "@media (min-width: 599px)": {
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    position: "fixed",
+                    top: "2vh",
+                    right: "0",
+                  },
+                }}
               >
-                {item === "Login" ? (isLoggedIn ? "Logout" : "Login") : item}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <nav>
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </nav>
-      <Box component="main" sx={{ p: 3 }}>
-        <Toolbar />
-        <Typography />
+                {navItems.map((item) => (
+                  <Button
+                    key={item}
+                    sx={{
+                      color: "#1976D2",
+                    }}
+                    onClick={() =>
+                      item === "Login" ? handleLogout() : handleNavigation(item)
+                    }
+                    style={{
+                      display: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item === "Login"
+                      ? isLoggedIn
+                        ? "Logout"
+                        : "Login"
+                      : item}
+                  </Button>
+                ))}
+              </Box>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <nav>
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </nav>
+        <Box component="main" sx={{ p: 3 }}>
+          <Toolbar />
+          <Typography />
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 
